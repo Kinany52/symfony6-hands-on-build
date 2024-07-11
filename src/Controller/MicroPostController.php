@@ -19,9 +19,9 @@ class MicroPostController extends AbstractController
             'controller_name' => 'MicroPostController',
         ]);
     }
-    #[Route('/micro-post/{id}', name: 'app_micro_post_show')]
-    public function showOne($id, MicroPostRepository $posts): Response
+    #[Route('/micro-post/{post}', name: 'app_micro_post_show')]
+    public function showOne(MicroPost $post): Response
     {
-        dd($posts->find($id));
+        dd($post);
     }
 }
