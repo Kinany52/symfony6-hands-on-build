@@ -11,11 +11,8 @@ class AppFixtures extends Fixture
 {
     public function load(ObjectManager $manager): void
     {
-        // $product = new Product();
-        // $manager->persist($product);
-
         $microPost1 = new MicroPost();
-        $microPost1->setTitle('Welcome to Poland!');
+        $microPost1->setTitle('Welcome in general!');
         $microPost1->setText('Welcome to Poland!');
         $microPost1->setCreated(new DateTime());
         $manager->persist($microPost1);
