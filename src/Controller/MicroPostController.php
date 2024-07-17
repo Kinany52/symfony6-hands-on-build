@@ -37,7 +37,7 @@ class MicroPostController extends AbstractController
             ->add('submit', SubmitType::class, ['label' => 'Save'])
             ->getForm();
 
-        return $this->renderForm(
+        return $this->render(
             'micro_post/add.html.twig',
             [
                 'form' => $form
