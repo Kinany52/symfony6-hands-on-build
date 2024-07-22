@@ -6,7 +6,9 @@ framework:
     handle_all_throwables: true
 
     form:
-        legacy_error_messages: false
+        #legacy_error_messages: false (Since symfony/framework-bundle 6.2: The child node "legacy_error_messages" at path "framework.form" is deprecated.)
+        #csrf_protection: true
+        #enabled: true
 
     # Enables session support. Note that the session will ONLY be started if you read or write from it.
     # Remove or comment this section to explicitly disable session support.
