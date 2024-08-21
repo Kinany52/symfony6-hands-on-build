@@ -2,6 +2,8 @@
 
 namespace App\Command;
 
+use App\Entity\User;
+use App\Repository\UserRepository;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -9,14 +11,18 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 #[AsCommand(
     name: 'app:create-user',
-    description: 'Add a short description for your command',
+    description: 'Creates a new user account',
 )]
 class CreateUserCommand extends Command
 {
-    public function __construct()
+    public function __construct(
+        private readonly UserPasswordHasherInterface $userPasswordHasher,
+        private readonly UserRepository $users
+    )
     {
         parent::__construct();
     }
@@ -24,25 +30,29 @@ class CreateUserCommand extends Command
     protected function configure(): void
     {
         $this
-            ->addArgument('arg1', InputArgument::OPTIONAL, 'Argument description')
-            ->addOption('option1', null, InputOption::VALUE_NONE, 'Option description')
+            ->addArgument('email', InputArgument::REQUIRED, 'User email')
+            ->addArgument('password', InputArgument::REQUIRED, 'User password')
+            //->addOption('option1', null, InputOption::VALUE_NONE, 'Option description')
         ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
-        $arg1 = $input->getArgument('arg1');
+        $email = $input->getArgument('email');
+        $password = $input->getArgument('password');
 
-        if ($arg1) {
-            $io->note(sprintf('You passed an argument: %s', $arg1));
-        }
+        $user = new User();
+        $user->setEmail($email);
+        $user->setPassword(
+            $this->userPasswordHasher->hashPassword(
+                $user,
+                $password
+            )
+        );
+        $this->users->add($user, true);
 
-        if ($input->getOption('option1')) {
-            // ...
-        }
-
-        $io->success('You have a new command! Now make it your own! Pass --help to see your options.');
+        $io->success(sprintf('User %s account was created!', $email));
 
         return Command::SUCCESS;
     }
