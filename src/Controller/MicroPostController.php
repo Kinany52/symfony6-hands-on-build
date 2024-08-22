@@ -27,6 +27,7 @@ class MicroPostController extends AbstractController
         ]);
     }
     #[Route('/micro-post/{post}', name: 'app_micro_post_show')]
+    #[isGranted(MicroPost::VIEW, 'post')]
     public function showOne(MicroPost $post): Response
     {
         return $this->render('micro_post/show.html.twig', [
@@ -64,12 +65,13 @@ class MicroPostController extends AbstractController
     }
 
     #[Route('/micro-post/{post}/edit', name: 'app_micro_post_edit')]
-    #[IsGranted("ROLE_EDITOR")]
+    #[isGranted(MicroPost::EDIT, 'post')]
     public function edit(MicroPost $post, Request $request, MicroPostRepository $posts): Response
     {
         $form = $this->createForm(MicroPostType::class, $post);
-
         $form->handleRequest($request);
+
+        $this->denyAccessUnlessGranted(MicroPost::EDIT, $post);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $post = $form->getData();
