@@ -18,7 +18,8 @@ class MicroPostType extends AbstractType
             ])
             ->add('text', TextType::class, [
                 'required' => false
-            ]);
+            ])
+            ->add('extraPrivacy');
     }
 
     public function configureOptions(OptionsResolver $resolver): void
